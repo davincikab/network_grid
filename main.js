@@ -1,7 +1,7 @@
-mapboxgl.accessToken = 'pk.eyJ1IjoiZGF1ZGk5NyIsImEiOiJjanJtY3B1bjYwZ3F2NGFvOXZ1a29iMmp6In0.9ZdvuGInodgDk7cv-KlujA';
+mapboxgl.accessToken = 'pk.eyJ1IjoiaW50ZWdyYWxldW13ZWx0aGVpbHVuZyIsImEiOiJja282aHcwcnIwYmxlMnZwYjNmOW9ocHBrIn0.t8V5_xRlR16tKMWq5hXyPw';
 var map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/daudi97/ckofd47m12w4d17oddfvd0vr5',
+    style: 'mapbox://styles/integraleumweltheilung/ckohq9myq3mb917mka4gwjjgj',
     center: [2.4313527, 33.6855357],
     zoom: 3
 });
