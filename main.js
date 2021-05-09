@@ -90,7 +90,7 @@ map.on('load', function () {
         type:"circle",
         paint: {
             'circle-radius': 3,
-            'circle-color': '#000'
+            'circle-color': '#fff'
         },
     });
 
@@ -120,7 +120,7 @@ map.on('load', function () {
         source: 'network-points-80',
         paint: {
             'circle-radius': 3,
-            'circle-color': '#000'
+            'circle-color': '#fff'
         }
     });
 
