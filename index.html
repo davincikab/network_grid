@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle Radius</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css" rel="stylesheet">
+
+    <style>
+        body {
+            margin:0;
+            padding: 0;
+        }
+
+        #map {
+            width:100vw;
+            height: 100vh;
+            z-index: 0;
+        }
+
+        .legendwrapper {
+            position: absolute;
+            top:0;
+            right:0;
+            z-index: 1;
+            margin:10px 10px;
+            padding:10px;
+            color:white;
+            background: rgba(22, 23, 29, 0.5);
+            border-radius: 5px;
+        }
+
+        h2 {
+            margin:0;
+        }
+
+        .mr6 {
+            margin-right: 1em;
+        }
+
+        .txt-s  {
+            margin:10px;
+            display: flex;
+            align-items: center;
+            font-size: 1em;
+        }
+        .txt-s .mr6{
+            width: 0.8em;
+            height:0.8em;
+            border-radius: 0.4em;
+        }
+    </style>
+</head>
+<body>
+    <div class="map" id="map"></div>
+    <div class="legendwrapper">
+            <div class="mb6">
+                <h2 class="txt-bold  color-white txt-s block">Device Uplinks</h2>
+                <p class="txt-s color-white">RSSI Values</p>
+            </div>
+            <div class="txt-s  color-white">
+                <div class="mr6" style="background-color: rgba(38, 251, 202, 0.3);"></div>
+                <span>-120</span>
+            </div>
+            <div class="txt-s  color-white">
+                <div class="mr6" style="background-color: rgba(38, 251, 202, 0.55);"></div>
+                <span>-100</span>
+            </div>
+            <div class="txt-s  color-white">
+                <div class="mr6" style="background-color: rgb(38, 251, 202);"></div>
+                <span>-80</span>
+            </div>
+            <div class="txt-s  color-white">
+                <div class="mr6" style="background-color: rgb(255, 255, 255);"></div>
+                <span>Hotspot</span>
+            </div>
+        </div>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js"></script>
+    <script src='https://unpkg.com/@turf/turf@6.3.0/turf.min.js'></script>
+    <script src="main.js"></script>
+</body>
+</html>
