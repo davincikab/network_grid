@@ -20,21 +20,30 @@ var network80 = [
 
 // create circles
 let features = [];
+let featuresPoints = [];
 network250.forEach(entry => {
     let circle = turf.circle(entry.coordinate, entry.radius, {properties:entry});
     features.push(circle);
+
+    let point = turf.point(entry.coordinate);
+    featuresPoints.push(point);
 });
 
 var networkGrid250 = turf.featureCollection(features);
+var networkGrid250Points = turf.featureCollection(featuresPoints);
 
 let features80 = [];
+let features80Points = [];
 network80.forEach(entry => {
     let circle = turf.circle(entry.coordinate, entry.radius, {properties:entry});
     features80.push(circle);
+
+    let point = turf.point(entry.coordinate);
+    features80Points.push(point);
 });
 
 var networkGrid80 = turf.featureCollection(features80);
-
+var networkGrid80Points = turf.featureCollection(features80Points);
 
 // measure tool layers
 var distanceContainer = document.getElementById('distance');
@@ -66,8 +75,23 @@ map.on('load', function () {
         type:"fill",
         paint:{
             'fill-color':'#26fbca',
-            'fill-opacity':0.55
+            'fill-opacity':0.35
         }
+    });
+
+    map.addSource("network-points", {
+        type:"geojson",
+        data:networkGrid250Points
+    });
+
+    map.addLayer({
+        id:"network-grid-250-point",
+        source:"network-points",
+        type:"circle",
+        paint: {
+            'circle-radius': 3,
+            'circle-color': '#000'
+        },
     });
 
     map.addSource("network-grid-80", {
@@ -81,7 +105,22 @@ map.on('load', function () {
         type:"fill",
         paint:{
             'fill-color':'#26fbca',
-            'fill-opacity':0.55
+            'fill-opacity':0.35
+        }
+    });
+
+    map.addSource("network-points-80", {
+        type:"geojson",
+        data:networkGrid80Points
+    });
+
+    map.addLayer({
+        id: 'network-grid-80-point',
+        type: 'circle',
+        source: 'network-points-80',
+        paint: {
+            'circle-radius': 3,
+            'circle-color': '#000'
         }
     });
 
@@ -89,7 +128,7 @@ map.on('load', function () {
     map.addSource('geojson', {
         'type': 'geojson',
         'data': geojson
-        });
+    });
          
     // Add styles to the map
     map.addLayer({
@@ -206,7 +245,12 @@ class LayerControl {
         console.log(layerId);
 
         var visibility = checked ? 'visible' : 'none';
-        this._map.getLayer(layerId) ? this._map.setLayoutProperty(layerId, 'visibility', visibility) : false;
+        if(this._map.getLayer(layerId)) {
+            this._map.setLayoutProperty(layerId, 'visibility', visibility);
+
+            let pointId = layerId + "-point";
+            this._map.setLayoutProperty(pointId, 'visibility', visibility);
+        }
     }
 
     onAdd(map) {
