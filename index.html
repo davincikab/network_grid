@@ -56,9 +56,49 @@
             background-color: white;
             padding: 5px 6px;
         }
+
+        .distance-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1;
+        }
+        
+        .distance-container > * {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 11px;
+            line-height: 18px;
+            display: block;
+            margin: 0;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+
+        .btn-circle {
+            border: 0;
+            border-radius: 50%;
+            padding:15px 15px;
+            background-color: rgb(5, 11, 24);
+            color: rgb(255, 255, 255);
+            cursor: pointer;
+        }
+
+        .mapboxgl-ctrl button:not(:disabled):hover {
+            background-color: rgb(5, 11, 24);
+        }
+
+        .mapboxgl-ctrl .btn-circle:hover {
+            background-color: rgb(5, 11, 24);
+        }
+
+        .mapboxgl-ctrl .btn-circle.active {
+            background-color:rgb(88, 80, 235) !important;
+        }
     </style>
 </head>
 <body>
+    <div id="distance" class="distance-container"></div>
     <div class="map" id="map"></div>
     <div class="legendwrapper">
             <div class="mb6">
