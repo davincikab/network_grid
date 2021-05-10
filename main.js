@@ -94,10 +94,10 @@ map.on('load', function () {
     map.addLayer({
         id:'grid',
         source:'grid',
-        type:"fill",
+        type:"line",
         paint:{
-            'fill-color':'#26fbca',
-            'fill-opacity':0.35
+            'line-color':'#fff',
+            'line-opacity':0.5
         }
     })
 
