@@ -141,7 +141,7 @@ map.on('load', function () {
         source: 'geojson',
         paint: {
             'circle-radius': 5,
-            'circle-color': '#000'
+            'circle-color': '#fff'
         },
         filter: ['in', '$type', 'Point']
     });
@@ -155,7 +155,8 @@ map.on('load', function () {
             'line-join': 'round'
         },
         paint: {
-            'line-color': '#000',
+            'line-color': '#fff',
+            'line-dasharray':[3,2],
             'line-width': 2.5
         },
         filter: ['in', '$type', 'LineString']
@@ -172,6 +173,7 @@ map.on('load', function () {
             isLineCreated = false;
 
             geojson.features = [];
+            distanceContainer.innerHTML = "";
             map.getSource("geojson").setData(geojson);
         }
         
@@ -284,7 +286,7 @@ function updateLength(linestring) {
 // layer names
 var layers = {
     'SHA 500km':'network-grid-250',
-    'Mini-SHA 180km':'network-grid-80'
+    'Mini-SHA 160km':'network-grid-80'
 };
 
 class LayerControl {
