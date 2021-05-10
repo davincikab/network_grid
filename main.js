@@ -46,7 +46,7 @@ var networkGrid80 = turf.featureCollection(features80);
 var networkGrid80Points = turf.featureCollection(features80Points);
 
 // Hexgrid
-var bbox = [-10.0267, 6.1115, 48.3102, 33.0212];   
+var bbox = [-131.0, -45, 164.0, 79.0212];   
 var cellSide = 250;
 var options = {units: 'kilometers'};
 
@@ -88,7 +88,7 @@ var isLineCreated = false;
 map.on('load', function () {
     map.addSource("grid", {
         type:"geojson",
-        data:theoreticalGrid
+        data:geojson
     });
 
     map.addLayer({
@@ -259,6 +259,27 @@ map.on('load', function () {
             
         }
     }); 
+
+    // fetch grid points
+    fetch("grid_centers.geojson")
+    .then(res => res.json())
+    .then(centroids => {
+        console.log(centroids);
+
+        // create the circle grids
+        let gridFeatures = centroids.features.map(center =>  {
+            let circle = turf.circle(center, 250, {properties:{}});
+            return circle;
+        });
+        
+        var theoreticalGrid =turf.featureCollection(gridFeatures);
+        console.log(theoreticalGrid);
+        // update the
+        map.getSource("grid").setData(theoreticalGrid);
+    })
+    .catch(error => {
+        console.error(error);
+    })
 });
 
 function updateLineFeature() {      
