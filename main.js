@@ -50,8 +50,8 @@ var distanceContainer = document.getElementById('distance');
  
 // GeoJSON object to hold our measurement features
 var geojson = {
-'type': 'FeatureCollection',
-'features': []
+    'type': 'FeatureCollection',
+    'features': []
 };
  
 // Used to draw a line between points
@@ -62,6 +62,10 @@ var linestring = {
         'coordinates': []
     }
 };
+
+var startPoint = [];
+var finishPoint = [];
+var isLineCreated = false;
 
 map.on('load', function () {
     map.addSource("network-grid-250", {
@@ -162,77 +166,125 @@ map.on('load', function () {
         var features = map.queryRenderedFeatures(e.point, {
             layers: ['measure-points']
         });
+
+        if(isLineCreated) {
+            startPoint = finishPoint = [];
+            isLineCreated = false;
+
+            geojson.features = [];
+            map.getSource("geojson").setData(geojson);
+        }
         
         if(!isEditMode) return;
 
-        // Remove the linestring from the group
-        // So we can redraw it based on the points collection
-        if (geojson.features.length > 1) geojson.features.pop();
-         
-        // Clear the Distance container to populate it with a new value
-        distanceContainer.innerHTML = '';
-         
-        // If a feature was clicked, remove it from the map
-        if (features.length) {
-            var id = features[0].properties.id;
-            geojson.features = geojson.features.filter(function (point) {
-                return point.properties.id !== id;
-            });
-        } else {
-            var point = {
-                'type': 'Feature',
-                'geometry': {
-                    'type': 'Point',
-                    'coordinates': [e.lngLat.lng, e.lngLat.lat]
-                },
-                'properties': {
-                    'id': String(new Date().getTime())
-                }
-            };
-            
-            geojson.features.push(point);
+        if(startPoint.length != 0 ) {
+            finishPoint = [e.lngLat.lng, e.lngLat.lat];
+            isLineCreated = true;
         }
-         
-        if (geojson.features.length > 1) {
-            linestring.geometry.coordinates = geojson.features.map(
-                function (point) {
-                    return point.geometry.coordinates;
-                }
-            );
-         
-            geojson.features.push(linestring);
-            
-            // Populate the distanceContainer with total distance
-            var value = document.createElement('pre');
-            value.textContent =
-            'Total distance: ' +
-            turf.length(linestring).toLocaleString() +
-            'km';
-            distanceContainer.appendChild(value);
+
+        if(startPoint.length == 0) {
+            startPoint = [e.lngLat.lng, e.lngLat.lat];
         }
-         
-        map.getSource('geojson').setData(geojson);
+
+        updateLineFeature();
     });
 
+    
     map.on('mousemove', function (e) {
+        // console.log(e);
+
         var features = map.queryRenderedFeatures(e.point, {
             layers: ['measure-points']
         });
-    
-        // UI indicator for clicking/hovering a point on the map
+
         if(isEditMode) {
+            // update the linestring feature
             map.getCanvas().style.cursor = features.length
             ? 'pointer'
             : 'crosshair';
         }
+
+        // UI indicator for clicking/hovering a point on the map
+        if(isEditMode && startPoint.length > 0) {
+            setTimeout(function(timer) {
+
+                if(!isLineCreated) {
+                    finishPoint = [e.lngLat.lng, e.lngLat.lat];
+                    linestring.geometry.coordinates = [startPoint, finishPoint];
+
+                    geojson.features = geojson.features.filter(feature => feature.geometry.type !="LineString");
+
+                    geojson.features.push(linestring);
+                    map.getSource('geojson').setData(geojson);
+
+                    updateLength(linestring);
+                }
+            }, 150);
+
+            
+        }
     }); 
 });
 
+function updateLineFeature() {      
+    // restore the geojson layer  
+    geojson.features = [];
+
+    // If a feature was clicked, remove it from the map
+    if(startPoint[0]) {
+        var point = {
+            'type': 'Feature',
+            'geometry': {
+                'type': 'Point',
+                'coordinates': startPoint
+            }
+        };
+            
+        geojson.features.push(point);
+    }
+
+    if(finishPoint[0]) {
+        var point = {
+            'type': 'Feature',
+            'geometry': {
+                'type': 'Point',
+                'coordinates': finishPoint
+            }
+        };
+            
+        geojson.features.push(point);
+    }
+         
+    if (geojson.features.length > 1) {
+        linestring.geometry.coordinates = geojson.features.map(
+            function (point) {
+                return point.geometry.coordinates;
+            }
+        );
+         
+        geojson.features.push(linestring)
+
+        // Populate the distanceContainer with total distance
+        updateLength(linestring);
+    }
+         
+    map.getSource('geojson').setData(geojson);
+}
+
+function updateLength(linestring) {
+    distanceContainer.innerHTML = "";
+    var value = document.createElement('pre');
+    value.textContent = 'Total distance: ' +
+    turf.length(linestring).toLocaleString() +
+    'km';
+
+    distanceContainer.appendChild(value);
+}
 
 // layer names
 var layers = {
-    '250 Km':'network-grid-250',
-    '80 Km':'network-grid-80'
+    'SHA 500km':'network-grid-250',
+    'Mini-SHA 180km':'network-grid-80'
 };
 
 class LayerControl {
