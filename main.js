@@ -45,6 +45,24 @@ network80.forEach(entry => {
 var networkGrid80 = turf.featureCollection(features80);
 var networkGrid80Points = turf.featureCollection(features80Points);
 
+// Hexgrid
+var bbox = [-10.0267, 6.1115, 48.3102, 33.0212];   
+var cellSide = 250;
+var options = {units: 'kilometers'};
+
+var hexgrid = turf.hexGrid(bbox, cellSide, options);
+
+
+var centroids = hexgrid.features.map(feature => turf.centroid(feature));
+
+let gridFeatures = centroids.map(center =>  {
+    let circle = turf.circle(center, 250, {properties:{}});
+    return circle;
+});
+
+var theoreticalGrid =turf.featureCollection(gridFeatures);
+console.log(centroids);
+
 // measure tool layers
 var distanceContainer = document.getElementById('distance');
  
@@ -68,6 +86,21 @@ var finishPoint = [];
 var isLineCreated = false;
 
 map.on('load', function () {
+    map.addSource("grid", {
+        type:"geojson",
+        data:theoreticalGrid
+    });
+
+    map.addLayer({
+        id:'grid',
+        source:'grid',
+        type:"fill",
+        paint:{
+            'fill-color':'#26fbca',
+            'fill-opacity':0.35
+        }
+    })
+
     map.addSource("network-grid-250", {
         type: 'geojson',
         'data':networkGrid250
@@ -285,6 +318,7 @@ function updateLength(linestring) {
 
 // layer names
 var layers = {
+    'Grid':'grid',
     'SHA 500km':'network-grid-250',
     'Mini-SHA 160km':'network-grid-80'
 };
