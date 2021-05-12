@@ -1,5 +1,4 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoiaW50ZWdyYWxldW13ZWx0aGVpbHVuZyIsImEiOiJja282aHcwcnIwYmxlMnZwYjNmOW9ocHBrIn0.t8V5_xRlR16tKMWq5hXyPw';
-var sideBarContainer = document.getElementById("side-bar");
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/integraleumweltheilung/ckohq9myq3mb917mka4gwjjgj',
@@ -452,4 +451,4 @@ class MeasureControl {
 } 
 
 var measureTool = new MeasureControl();
-measureTool.addTo('measure-tool');
+map.addControl(measureTool, 'bottom-right');
