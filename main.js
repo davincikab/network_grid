@@ -62,7 +62,7 @@ let gridFeatures = centroids.map(center =>  {
 });
 
 var theoreticalGrid =turf.featureCollection(gridFeatures);
-console.log(centroids);
+// console.log(centroids);
 
 // measure tool layers
 var distanceContainer = document.getElementById('distance');
@@ -112,14 +112,14 @@ map.on('load', function () {
         source:"network-grid-250",
         type:"fill",
         paint:{
-            'fill-color':'#26fbca',
+            'fill-color':'brown',
             'fill-opacity':0.35
         }
     });
 
     map.addSource("network-points", {
         type:"geojson",
-        data:networkGrid250Points
+        data:"data/postcode_500.geojson"
     });
 
     map.addLayer({
@@ -127,8 +127,8 @@ map.on('load', function () {
         source:"network-points",
         type:"circle",
         paint: {
-            'circle-radius': 3,
-            'circle-color': '#fff'
+            'circle-radius': 4,
+            'circle-color': 'brown'
         },
     });
 
@@ -149,7 +149,7 @@ map.on('load', function () {
 
     map.addSource("network-points-80", {
         type:"geojson",
-        data:networkGrid80Points
+        data:"data/postcode_160.geojson"
     });
 
     map.addLayer({
@@ -157,7 +157,7 @@ map.on('load', function () {
         type: 'circle',
         source: 'network-points-80',
         paint: {
-            'circle-radius': 3,
+            'circle-radius': 4,
             'circle-color': '#fff'
         }
     });
@@ -430,9 +430,9 @@ class MeasureControl {
                 button.classList.remove("active");
 
                 geojson.features = [];
-                map.getSource('geojson').setData(geojson);
+                this._map.getSource('geojson').setData(geojson);
 
-                map.getCanvas().style.cursor = "pointer";
+                this._map.getCanvas().style.cursor = "pointer";
             } 
         }
 
