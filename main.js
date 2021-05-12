@@ -130,7 +130,8 @@ map.on('load', function () {
         type:"circle",
         paint: {
             'circle-radius': 4,
-            'circle-color': 'brown'
+            'circle-color': '#1f0e8e',
+            'circle-opacity':0.9
         },
     });
 
@@ -163,7 +164,8 @@ map.on('load', function () {
         source: 'network-points-80',
         paint: {
             'circle-radius': 4,
-            'circle-color': '#fff'
+            'circle-color': 'lightblue',
+            'circle-opacity':0.9
         }
     });
 
@@ -278,10 +280,19 @@ map.on('load', function () {
             return circle;
         });
         
-        var theoreticalGrid =turf.featureCollection(gridFeatures);
+        theoreticalGrid = turf.featureCollection(gridFeatures);
         console.log(theoreticalGrid);
         // update the
         map.getSource("grid").setData(theoreticalGrid);
+
+        // download the data
+        var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(theoreticalGrid));
+        var dlAnchorElem = document.getElementById('downloadAnchorElem');
+        dlAnchorElem.setAttribute("href",     dataStr     );
+        dlAnchorElem.setAttribute("download", "grid.json");
+        // dlAnchorElem.click();
+
+
     })
     .catch(error => {
         console.error(error);
