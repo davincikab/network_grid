@@ -112,7 +112,10 @@ map.on('load', function () {
         type:"fill",
         paint:{
             'fill-color':'brown',
-            'fill-opacity':0.35
+            'fill-opacity':0
+        },
+        layout:{
+            'visibility':'none'
         }
     });
 
@@ -142,7 +145,10 @@ map.on('load', function () {
         type:"fill",
         paint:{
             'fill-color':'#26fbca',
-            'fill-opacity':0.35
+            'fill-opacity':0
+        },
+        layout:{
+            'visibility':'none'
         }
     });
 
