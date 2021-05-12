@@ -1,4 +1,5 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoiaW50ZWdyYWxldW13ZWx0aGVpbHVuZyIsImEiOiJja282aHcwcnIwYmxlMnZwYjNmOW9ocHBrIn0.t8V5_xRlR16tKMWq5hXyPw';
+var sideBarContainer = document.getElementById("side-bar");
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/integraleumweltheilung/ckohq9myq3mb917mka4gwjjgj',
@@ -438,6 +439,11 @@ class MeasureControl {
         this._container.append(button);
         return this._container;
     }
+
+    addTo(elementId) {
+        let element = document.getElementById(elementId);
+        element.append(this.onAdd(map));
+    }
          
     onRemove() {
         this._container.parentNode.removeChild(this._container);
@@ -446,4 +452,4 @@ class MeasureControl {
 } 
 
 var measureTool = new MeasureControl();
-map.addControl(measureTool, 'bottom-right');
+measureTool.addTo('measure-tool');

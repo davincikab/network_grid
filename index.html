@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Circle Radius</title>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <style>
         body {
             margin:0;
@@ -58,13 +59,13 @@
 
         .distance-container {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            bottom: 20px;
+            right: 10px;
             z-index: 1;
         }
         
         .distance-container > * {
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.9);
             color: #fff;
             font-size: 11px;
             line-height: 18px;
@@ -78,7 +79,8 @@
             border: 0;
             border-radius: 50%;
             padding:15px 15px;
-            background-color: rgb(5, 11, 24);
+            /* background-color: rgb(5, 11, 24); */
+            background-color: transparent;
             color: rgb(255, 255, 255);
             cursor: pointer;
         }
@@ -94,10 +96,71 @@
         .mapboxgl-ctrl .btn-circle.active {
             background-color:rgb(88, 80, 235) !important;
         }
+
+        /* sidebar styling */
+        .side-bar {
+            position: absolute;
+            z-index: 1;
+            background-color: #111724;
+            top:0;
+            left:0;
+            width:50px;
+            height: 95vh;
+            padding:1em 0em;
+            box-shadow: 0.2em 0.2em 0.2em #111724;
+        }
+
+        .link-section {
+            padding:0.5em 0.25em;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-link {
+            color:white;
+            text-decoration: none;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div id="distance" class="distance-container"></div>
+
+    <div class="side-bar" id="side-bar">
+        <!-- links -->
+        <div class="link-section">
+            <a 
+                href="https://earth.google.com/web/@13.62817277,-6.7107618,295.16176477a,12029082.1793837d,30y,0h,0t,0r/data=MicKJQojCiExVTFTU2NMVGlmSmdIeUY5Mng3cG5xUUFHdEhRT2U0TkU"
+                 class="btn-link"
+            >
+                <i class="fa fa-globe fa-2x"></i>
+            </a>
+        </div>
+       
+        <div class="link-section">
+            <a href="" class="btn-link">
+                <i class="fa fa-youtube fa-2x"></i>
+            </a>
+        </div>
+        
+        <div class="link-section">
+            <a href="" class="btn-link">
+                <i class="fa fa-telegram fa-2x"></i>
+            </a>
+        </div>
+
+        <div class="link-section">
+            <a href="" class="btn-link">
+                <i class="fa fa-phone fa-2x"></i>
+            </a>
+        </div>
+
+        <div class="link-section" id="measure-tool">
+
+        </div>
+    </div>
     <div class="map" id="map"></div>
     <div class="legendwrapper">
             <div class="mb6">
