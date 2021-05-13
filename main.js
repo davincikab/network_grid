@@ -41,7 +41,7 @@ network80.forEach(entry => {
     let point = turf.point(entry.coordinate);
     features80Points.push(point);
 });
-
+          
 var networkGrid80 = turf.featureCollection(features80);
 var networkGrid80Points = turf.featureCollection(features80Points);
 
@@ -112,12 +112,26 @@ map.on('load', function () {
         type:"fill",
         paint:{
             'fill-color':'brown',
-            'fill-opacity':0
-        },
-        layout:{
-            'visibility':'none'
+            'fill-opacity':0.35
         }
     });
+
+    fetch("data/postcode_500.geojson")
+    .then(res => res.json())
+    .then(data => {
+        // create the circle
+        let circles = data.features.map(feature => {
+            let circle = turf.circle(feature, 250, {properties:features.properties});
+
+            return circle;
+        });
+        let networkGrid250 = turf.featureCollection(circles);
+        console.log(networkGrid250)
+
+        // update the source
+        map.getSource("network-grid-250").setData(networkGrid250);
+    })
+    .catch(err => console.error)
 
     map.addSource("network-points", {
         type:"geojson",
@@ -129,8 +143,8 @@ map.on('load', function () {
         source:"network-points",
         type:"circle",
         paint: {
-            'circle-radius': 4,
-            'circle-color': '#1f0e8e',
+            'circle-radius': 3,
+            'circle-color': 'brown',
             'circle-opacity':0.9
         },
     });
@@ -146,10 +160,7 @@ map.on('load', function () {
         type:"fill",
         paint:{
             'fill-color':'#26fbca',
-            'fill-opacity':0
-        },
-        layout:{
-            'visibility':'none'
+            'fill-opacity':0.35
         }
     });
 
@@ -163,11 +174,28 @@ map.on('load', function () {
         type: 'circle',
         source: 'network-points-80',
         paint: {
-            'circle-radius': 4,
+            'circle-radius': 2,
             'circle-color': 'lightblue',
             'circle-opacity':0.9
         }
     });
+
+    fetch("data/postcode_160.geojson")
+    .then(res => res.json())
+    .then(data => {
+        // create the circle
+        let circles = data.features.map(feature => {
+            let circle = turf.circle(feature, 80, {properties:features.properties});
+
+            return circle;
+        });
+        let networkGrid80 = turf.featureCollection(circles);
+        console.log(networkGrid80)
+
+        // update the source
+        map.getSource("network-grid-80").setData(networkGrid80);
+    })
+    .catch(err => console.error)
 
     // add points
     map.addSource('geojson', {
@@ -373,9 +401,11 @@ class LayerControl {
         var visibility = checked ? 'visible' : 'none';
         if(this._map.getLayer(layerId)) {
             this._map.setLayoutProperty(layerId, 'visibility', visibility);
-
             let pointId = layerId + "-point";
-            this._map.setLayoutProperty(pointId, 'visibility', visibility);
+
+            if(this._map.getLayer(pointId)) {
+                this._map.setLayoutProperty(pointId, 'visibility', visibility);
+            }
         }
     }
 
