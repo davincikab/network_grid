@@ -116,26 +116,26 @@ map.on('load', function () {
         }
     });
 
-    fetch("data/postcode_500.geojson")
-    .then(res => res.json())
-    .then(data => {
-        // create the circle
-        let circles = data.features.map(feature => {
-            let circle = turf.circle(feature, 250, {properties:features.properties});
+    // fetch("data/postcode_500.geojson")
+    // .then(res => res.json())
+    // .then(data => {
+    //     // create the circle
+    //     let circles = data.features.map(feature => {
+    //         let circle = turf.circle(feature, 250, {properties:features.properties});
 
-            return circle;
-        });
-        let networkGrid250 = turf.featureCollection(circles);
-        console.log(networkGrid250)
+    //         return circle;
+    //     });
+    //     let networkGrid250 = turf.featureCollection(circles);
+    //     console.log(networkGrid250)
 
-        // update the source
-        map.getSource("network-grid-250").setData(networkGrid250);
-    })
-    .catch(err => console.error)
+    //     // update the source
+    //     map.getSource("network-grid-250").setData(networkGrid250);
+    // })
+    // .catch(err => console.error)
 
     map.addSource("network-points", {
         type:"geojson",
-        data:"data/postcode_500.geojson"
+        data:'{"type":"featureCollection", "features":[]}'
     });
 
     map.addLayer({
@@ -149,6 +149,21 @@ map.on('load', function () {
         },
     });
 
+    d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vT0TwUes7ENO5hP961VxGOKBfepsFgZIxjwnYd_KIOR4FJTtbTcDsawB4DuJCfV8g-xvHgYBiPHIT5e/pub?gid=2017978902&single=true&output=csv")
+    .then(data => {
+        console.log(data);
+        // update dot 
+        let point250Km = createGeoJson(data);
+        map.getSource('network-points').setData(point250Km);
+
+        // create circle
+        let circle250km = createCircles(point250Km, 250);
+        map.getSource("network-grid-250").setData(circle250km);
+    })
+    .catch(err => console.error);
+
+
+    // 80 KM
     map.addSource("network-grid-80", {
         type: 'geojson',
         'data':networkGrid80
@@ -166,7 +181,7 @@ map.on('load', function () {
 
     map.addSource("network-points-80", {
         type:"geojson",
-        data:"data/postcode_160.geojson"
+        data:'{"type":"featureCollection", "features":[]}'
     });
 
     map.addLayer({
@@ -180,22 +195,35 @@ map.on('load', function () {
         }
     });
 
-    fetch("data/postcode_160.geojson")
-    .then(res => res.json())
+    d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSPz3-Oh9YzdngmX6lF5PhFuTQUVGhO5FORDb9rTh5xs2FZXbY5N6A_ub17AnUpdIeE9IGGeXmoiutM/pub?gid=417254507&single=true&output=csv")
     .then(data => {
-        // create the circle
-        let circles = data.features.map(feature => {
-            let circle = turf.circle(feature, 80, {properties:features.properties});
+        console.log(data);
+        // update dot 
+        let point160Km = createGeoJson(data);
+        map.getSource('network-points-80').setData(point160Km);
 
-            return circle;
-        });
-        let networkGrid80 = turf.featureCollection(circles);
-        console.log(networkGrid80)
-
-        // update the source
-        map.getSource("network-grid-80").setData(networkGrid80);
+        // create circle
+        let circle160km = createCircles(point160Km, 80);
+        map.getSource("network-grid-80").setData(circle160km);
     })
-    .catch(err => console.error)
+    .catch(err => console.error);
+
+    // fetch("data/postcode_160.geojson")
+    // .then(res => res.json())
+    // .then(data => {
+    //     // create the circle
+    //     let circles = data.features.map(feature => {
+    //         let circle = turf.circle(feature, 80, {properties:features.properties});
+
+    //         return circle;
+    //     });
+    //     let networkGrid80 = turf.featureCollection(circles);
+    //     console.log(networkGrid80)
+
+    //     // update the source
+    //     map.getSource("network-grid-80").setData(networkGrid80);
+    // })
+    // .catch(err => console.error)
 
     // add points
     map.addSource('geojson', {
@@ -498,4 +526,28 @@ class MeasureControl {
 } 
 
 var measureTool = new MeasureControl();
-map.addControl(measureTool, 'bottom-right');
+measureTool.addTo("measure-tool");
+
+// google sheets parse function
+function createGeoJson(data) {
+    var features = data.map(entry => {
+        return turf.point([
+            parseFloat(entry.x),
+            parseFloat(entry.y)
+        ], 
+        {...entry}
+        );
+    });
+
+    return turf.featureCollection(features);
+}
+
+function createCircles(data, radius) {
+    let circles = data.features.map(feature => {
+        let circle = turf.circle(feature, radius, {properties:features.properties});
+
+        return circle;
+    });
+
+    return turf.featureCollection(circles);
+}
