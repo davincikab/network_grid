@@ -103,7 +103,7 @@ map.on('load', function () {
 
     map.addSource("network-grid-250", {
         type: 'geojson',
-        'data':networkGrid250
+        data:{"type":"featureCollection", "features":[]}
     });
 
     map.addLayer({
@@ -111,8 +111,8 @@ map.on('load', function () {
         source:"network-grid-250",
         type:"fill",
         paint:{
-            'fill-color':'brown',
-            'fill-opacity':0.35
+            'fill-color':'white',
+            'fill-opacity':0.25
         }
     });
 
@@ -135,7 +135,7 @@ map.on('load', function () {
 
     map.addSource("network-points", {
         type:"geojson",
-        data:'{"type":"featureCollection", "features":[]}'
+        data:{"type":"featureCollection", "features":[]}
     });
 
     map.addLayer({
@@ -144,13 +144,14 @@ map.on('load', function () {
         type:"circle",
         paint: {
             'circle-radius': 3,
-            'circle-color': 'brown',
+            'circle-color': 'yellow',
             'circle-opacity':0.9
         },
     });
 
-    d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vT0TwUes7ENO5hP961VxGOKBfepsFgZIxjwnYd_KIOR4FJTtbTcDsawB4DuJCfV8g-xvHgYBiPHIT5e/pub?gid=2017978902&single=true&output=csv")
+    d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSQdKplFEG-mJcfrWEGMUhToB4JkuQMS3RnHNiSIHwlnRzLyAuqJX7Xt5XqT7b35cVDUoFwKADNicNQ/pub?output=csv")
     .then(data => {
+        console.log("25km Points");
         console.log(data);
         // update dot 
         let point250Km = createGeoJson(data);
@@ -175,13 +176,13 @@ map.on('load', function () {
         type:"fill",
         paint:{
             'fill-color':'#26fbca',
-            'fill-opacity':0.35
+            'fill-opacity':0.25
         }
     });
 
     map.addSource("network-points-80", {
         type:"geojson",
-        data:'{"type":"featureCollection", "features":[]}'
+        data:{"type":"featureCollection", "features":[]}
     });
 
     map.addLayer({
@@ -195,7 +196,7 @@ map.on('load', function () {
         }
     });
 
-    d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vSPz3-Oh9YzdngmX6lF5PhFuTQUVGhO5FORDb9rTh5xs2FZXbY5N6A_ub17AnUpdIeE9IGGeXmoiutM/pub?gid=417254507&single=true&output=csv")
+    d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vT2Iqkm1KQlfoR8XIyqHy6ri_rx29p7bi0-4EDMLDBQFmCv0_rNBEr-EA2WHS_iylxhKlLWbmp3sFOq/pub?output=csv")
     .then(data => {
         console.log(data);
         // update dot 
@@ -484,8 +485,11 @@ layerCheckboxes.forEach(layerCheckbox => {
 
 // measure tool
 class MeasureControl {
-    onAdd(map) {
+    constructor(map) {
         this._map = map;
+    }
+    onAdd(map) {
+        console.log(this._map);
         this._container = document.createElement('div');
         this._container.className = 'mapboxgl-ctrl';
 
@@ -493,7 +497,7 @@ class MeasureControl {
         button.className = "btn-circle"
         button.innerHTML = "<img src='data:image/svg+xml;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgZm9jdXNhYmxlPSJmYWxzZSIgZGF0YS1wcmVmaXg9ImZhbCIgZGF0YS1pY29uPSJydWxlciIgY2xhc3M9InN2Zy1pbmxpbmUtLWZhIGZhLXJ1bGVyIGZhLXctMjAiIHJvbGU9ImltZyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNjQwIDUxMiI+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTYzNS43IDE2NS44TDU1Ni4xIDI3LjlDNTUwLjIgMTcuNyA1MzkuNSAxMiA1MjguNSAxMmMtNS40IDAtMTAuOSAxLjQtMTUuOSA0LjNMMTUuOSAzMDIuOEMuNyAzMTEuNS00LjUgMzMxIDQuMyAzNDYuMkw4My45IDQ4NGM1LjkgMTAuMiAxNi42IDE1LjkgMjcuNiAxNS45IDUuNCAwIDEwLjktMS40IDE1LjktNC4zTDYyNCAyMDkuMWMxNS4zLTguNiAyMC41LTI4LjEgMTEuNy00My4zek0xMTEuNSA0NjguMkwzMS45IDMzMC4zbDY5LTM5LjggNDMuOCA3NS44YzIuMiAzLjggNy4xIDUuMSAxMC45IDIuOWwxMy44LThjMy44LTIuMiA1LjEtNy4xIDIuOS0xMC45bC00My44LTc1LjggNTUuMi0zMS44IDI3LjkgNDguMmMyLjIgMy44IDcuMSA1LjEgMTAuOSAyLjlsMTMuOC04YzMuOC0yLjIgNS4xLTcuMSAyLjktMTAuOWwtMjcuOS00OC4yIDU1LjItMzEuOCA0My44IDc1LjhjMi4yIDMuOCA3LjEgNS4xIDEwLjkgMi45bDEzLjgtOGMzLjgtMi4yIDUuMS03LjEgMi45LTEwLjlMMjk0IDE3OS4xbDU1LjItMzEuOCAyNy45IDQ4LjJjMi4yIDMuOCA3LjEgNS4xIDEwLjkgMi45bDEzLjgtOGMzLjgtMi4yIDUuMS03LjEgMi45LTEwLjlsLTI3LjktNDguMkw0MzIgOTkuNWw0My44IDc1LjhjMi4yIDMuOCA3LjEgNS4xIDEwLjkgMi45bDEzLjgtOGMzLjgtMi4yIDUuMS03LjEgMi45LTEwLjlsLTQzLjgtNzUuOCA2OS0zOS44IDc5LjYgMTM3LjgtNDk2LjcgMjg2Ljd6Ij48L3BhdGg+PC9zdmc+' width='24px'/>"
 
-        button.onclick = function(e) {
+        button.onclick = (e) => {
             let target = e.target;
             target = target.toString().includes("img") ? target.parentNode : target;
 
@@ -514,7 +518,10 @@ class MeasureControl {
         return this._container;
     }
 
-    addTo(elementId) {
+    addTo(elementId, map) {
+        this._map = map;
+
+        console.log(map);
         let element = document.getElementById(elementId);
         element.append(this.onAdd(map));
     }
@@ -525,8 +532,8 @@ class MeasureControl {
     }
 } 
 
-var measureTool = new MeasureControl();
-measureTool.addTo("measure-tool");
+var measureTool = new MeasureControl(map);
+measureTool.addTo("measure-tool", map);
 
 // google sheets parse function
 function createGeoJson(data) {
