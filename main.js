@@ -103,7 +103,7 @@ map.on('load', function () {
 
     map.addSource("network-grid-250", {
         type: 'geojson',
-        data:{"type":"featureCollection", "features":[]}
+        data:{"type": "FeatureCollection","features": []}
     });
 
     map.addLayer({
@@ -135,7 +135,7 @@ map.on('load', function () {
 
     map.addSource("network-points", {
         type:"geojson",
-        data:{"type":"featureCollection", "features":[]}
+        data:{"type": "FeatureCollection","features": []}
     });
 
     map.addLayer({
@@ -167,7 +167,7 @@ map.on('load', function () {
     // 80 KM
     map.addSource("network-grid-80", {
         type: 'geojson',
-        'data':networkGrid80
+        data:{"type": "FeatureCollection","features": []}
     });
 
     map.addLayer({
@@ -182,7 +182,7 @@ map.on('load', function () {
 
     map.addSource("network-points-80", {
         type:"geojson",
-        data:{"type":"featureCollection", "features":[]}
+        data:{"type": "FeatureCollection","features": []}
     });
 
     map.addLayer({
